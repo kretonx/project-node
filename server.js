@@ -46,6 +46,51 @@ const server = http.createServer((req, res)=>{
   }));
   return;
 }
+if (req.url.startsWith('/tickets/') && req.method === 'PUT') {
+  const id = Number(req.url.split('/')[2]);
+  const data = JSON.parse(body);
+  
+  if (!data.title || !data.description) {
+  res.writeHead(400, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ error: 'title and description are required' }));
+  return;
+}
+
+
+  const ticket = tickets.find(t => t.id === id);
+
+  if (!ticket) {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'ticket not found' }));
+    return;
+  }
+
+  ticket.status = data.status;
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify(ticket));
+  return;
+} if (req.url.startsWith('/tickets/') && req.method === 'PUT') {
+  const id = Number(req.url.split('/')[2]);
+  const data = JSON.parse(body);
+
+  const ticket = tickets.find(t => t.id === id);
+
+  if (!ticket) {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'ticket not found' }));
+    return;
+  }
+
+  ticket.status = data.status;
+
+  res.writeHead(200, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify(ticket));
+  return;
+}
+
+
+
   res.writeHead(404, {'Content-Type': 'application/json'});
   res.end(JSON.stringify({error: 'rota nao encontrada'}));
 })
