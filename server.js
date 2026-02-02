@@ -57,6 +57,7 @@ if (req.url.startsWith('/tickets/') && req.method === 'PUT') {
 }
 
 
+
   const ticket = tickets.find(t => t.id === id);
 
   if (!ticket) {
@@ -64,6 +65,15 @@ if (req.url.startsWith('/tickets/') && req.method === 'PUT') {
     res.end(JSON.stringify({ error: 'ticket not found' }));
     return;
   }
+  
+  const allowedStatus = ['open', 'in_progress', 'done'];
+
+if (!allowedStatus.includes(data.status)) {
+  res.writeHead(400, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({ error: 'invalid status' }));
+  return;
+}
+
 
   ticket.status = data.status;
 
